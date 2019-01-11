@@ -56,12 +56,16 @@ module.exports = {
       if (uploadedFiles.length === 0){
         return res.badRequest('No file was uploaded');
       }
-      return res.send(uploadedFiles);
+      //return res.send(uploadedFiles);
+      return res.redirect('/say');
     });
   },
 
   create: async function(req, res) {
     await Sentences.create({ sentence: req.param('sentence') });
+
+    // La queue ne fonctionne pas, le container ajouté au docker-compose.yml n'arrive pas à communiquer avec le container redis
+
     // var kue_engine = sails.config.kue;
     // kue_engine.create('delete_verified_email', {sentence:req.param('sentence'),email:'cedric.chavaudra@etu.unistra.fr'})
     //   .priority('medium')
