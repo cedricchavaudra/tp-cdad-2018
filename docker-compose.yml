@@ -9,9 +9,13 @@ services:
     environment:
       COW: vader
       DATABASE_URL: postgresql://moi:biniou@db:5432/cowsay
+      REDIS_URL: redis://biniou@redis:6379/0'
     links:
       - db
-
+      - redis
+    depends_on:
+      - redis
+      - db
   db:
     # Documentation about this image here: https://hub.docker.com/_/postgres
     image: postgres:11
@@ -24,3 +28,22 @@ services:
       POSTGRES_DB: cowsay
     ports:
       - 5432:5432
+  redis:
+    image: redis
+    #command: redis-server --requirepass biniou
+    ports:
+      - 6379:6379
+    environment:
+      REDIS_PASSWORD: biniou
+  # worker:
+  #   image: node
+  #   working_dir: /app
+  #   command: node worker.js
+  #   environment:
+  #     REDIS_URL: redis://biniou@redis:6379/0'
+  #   volumes:
+  #     - ./:/app
+  #   links:
+  #     - redis
+  #   depends_on:
+  #   - redis

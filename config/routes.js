@@ -36,4 +36,6 @@ module.exports.routes = {
   'get /say':  'CowsayController.say',
   'get /add':  'CowsayController.add',
   'post /add':  'CowsayController.create',
+  'get /addPicture':  'CowsayController.addPicture',
+  'post /addPicture':  'CowsayController.updatePicture',
 };

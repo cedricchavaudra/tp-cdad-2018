@@ -32,8 +32,42 @@ module.exports = {
     return res.view('add');
   },
 
+  addPicture: async function (req, res) {
+    return res.view('addPicture');
+  },
+
+  updatePicture: async function (req, res) {
+    req.file('picture').upload(
+    {
+      adapter: require('skipper-better-s3'),
+      key: 'AKIAJOCSBD4KTGNIE2YQ',
+      secret: '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',
+      bucket: 'lp-cdad-2018',
+      region: 'eu-west-3',
+      saveAs: 'chavaudra_vache.jpg',
+      s3params: { 
+        ACL: 'public-read'
+      }
+    }
+    ,function whenDone(err, uploadedFiles) {
+      if (err) {
+        return res.serverError(err);
+      }
+      if (uploadedFiles.length === 0){
+        return res.badRequest('No file was uploaded');
+      }
+      return res.send(uploadedFiles);
+    });
+  },
+
   create: async function(req, res) {
     await Sentences.create({ sentence: req.param('sentence') });
+    // var kue_engine = sails.config.kue;
+    // kue_engine.create('delete_verified_email', {sentence:req.param('sentence'),email:'cedric.chavaudra@etu.unistra.fr'})
+    //   .priority('medium')
+    //   .attempts(1)
+    //   .save();
+    Mailer.sendWelcomeMail({sentence:req.param('sentence'),email:req.param('email')});
     return res.redirect('/say');
   },
 };
